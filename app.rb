@@ -27,11 +27,18 @@ post '/signin' do
 end
 
 post '/signup' do
-  @user = User.create(mail: params[:mail], password:params[:password], password_confirmation:params[:password_confirmation])
-  if @user.persisted?
-    session[:user] = @user.id
+  user = User.find_by(mail: params[:mail])
+
+  if user.nil?
+    @user = User.create(mail: params[:mail], password:params[:password], password_confirmation:params[:password_confirmation])
+    if @user.persisted?
+      session[:user] = @user.id
+    end
+    redirect '/'
+  else
+
+    redirect '/'
   end
-  redirect '/'
 end
 
 get '/signout' do
